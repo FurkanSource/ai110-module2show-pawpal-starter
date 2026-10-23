@@ -224,7 +224,7 @@ class Scheduler:
             entry[1].category != self.owner.preferred_category,
             entry[1].starts_at,
         ))
-        selected = []
+        selected: list[tuple[Pet, Task]] = []
         reasons = []
         used = 0
         carryovers = [

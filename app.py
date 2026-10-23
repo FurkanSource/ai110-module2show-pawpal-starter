@@ -24,7 +24,7 @@ def schedule_rows(entries):
 def show_schedule(entries):
     """Display a schedule or a useful empty state."""
     if entries:
-        st.dataframe(schedule_rows(entries), hide_index=True, use_container_width=True)
+        st.dataframe(schedule_rows(entries), hide_index=True, width="stretch")
     else:
         st.info("No tasks match these filters.")
 
@@ -35,6 +35,39 @@ def flash(message):
     st.rerun()
 
 
+def save_task(task_id):
+    """Apply form edits before the next render so widget options stay current."""
+    state = st.session_state
+    try:
+        Scheduler(state.owner).update_task(
+            task_id,
+            description=state[f"description_{task_id}"],
+            due_date=state[f"date_{task_id}"],
+            time=state[f"time_{task_id}"].strftime("%H:%M"),
+            duration_minutes=int(state[f"duration_{task_id}"]),
+            priority=state[f"priority_{task_id}"],
+            frequency=state[f"frequency_{task_id}"],
+            category=state[f"category_{task_id}"],
+        )
+        state.notice = "Task updated. The schedule and conflicts have been recalculated."
+    except ValueError as exc:
+        state.notice_error = str(exc)
+
+
+def complete_task(task_id):
+    """Complete a task before rerendering the schedule and editor controls."""
+    try:
+        active_scheduler = Scheduler(st.session_state.owner)
+        _, task = active_scheduler.find_task(task_id)
+        next_task = active_scheduler.mark_task_complete(task_id)
+        message = f"Completed {task.description}."
+        if next_task:
+            message += f" Next occurrence: {next_task.due_date} at {next_task.time}."
+        st.session_state.notice = message
+    except ValueError as exc:
+        st.session_state.notice_error = str(exc)
+
+
 if "owner" not in st.session_state:
     st.session_state.owner = Owner("Pet owner")
 owner = st.session_state.owner
@@ -42,8 +75,12 @@ scheduler = Scheduler(owner)
 
 st.title("🐾 PawPal+")
 st.caption("A little structure. A happier day for every pet.")
+notice_area = st.empty()
+error_area = st.empty()
 if "notice" in st.session_state:
-    st.success(st.session_state.pop("notice"))
+    notice_area.success(st.session_state.pop("notice"))
+if "notice_error" in st.session_state:
+    error_area.error(st.session_state.pop("notice_error"))
 
 with st.sidebar:
     st.header("Your household")
@@ -123,28 +160,24 @@ with tasks_tab:
         if editable:
             st.divider()
             st.subheader("Edit a pending task")
-            labels = {task.id: f"{pet.name} · {task.description} · {task.due_date} {task.time}" for pet, task in editable}
-            edit_id = st.selectbox("Task to edit", list(labels), format_func=labels.get)
+            labels = {
+                task.id: f"{index}. {pet.name} · {task.description} · {task.due_date} {task.time}"
+                for index, (pet, task) in enumerate(editable, start=1)
+            }
+            chosen_label = st.selectbox("Task to edit", list(labels.values()), key="task_to_edit")
+            edit_id = next(task_id for task_id, label in labels.items() if label == chosen_label)
             _, current = scheduler.find_task(edit_id)
             with st.form(f"edit_{edit_id}"):
-                edited_description = st.text_input("Edit description", current.description)
+                st.text_input("Edit description", current.description, key=f"description_{edit_id}")
                 columns = st.columns(3)
-                edited_date = columns[0].date_input("Edit date", current.due_date)
-                edited_time = columns[1].time_input("Edit time", current.starts_at.time())
-                edited_duration = columns[2].number_input("Edit duration", 1, 240, current.duration_minutes)
+                columns[0].date_input("Edit date", current.due_date, key=f"date_{edit_id}")
+                columns[1].time_input("Edit time", current.starts_at.time(), key=f"time_{edit_id}")
+                columns[2].number_input("Edit duration", 1, 240, current.duration_minutes, key=f"duration_{edit_id}")
                 columns = st.columns(3)
-                edited_priority = columns[0].selectbox("Edit priority", list(PRIORITIES), index=list(PRIORITIES).index(current.priority))
-                edited_frequency = columns[1].selectbox("Edit repeat", list(FREQUENCIES), index=list(FREQUENCIES).index(current.frequency))
-                edited_category = columns[2].selectbox("Edit activity type", list(CATEGORIES), index=list(CATEGORIES).index(current.category))
-                if st.form_submit_button("Save task changes"):
-                    try:
-                        scheduler.update_task(edit_id, description=edited_description,
-                                              due_date=edited_date, time=edited_time.strftime("%H:%M"),
-                                              duration_minutes=int(edited_duration), priority=edited_priority,
-                                              frequency=edited_frequency, category=edited_category)
-                        flash("Task updated. The schedule and conflicts have been recalculated.")
-                    except ValueError as exc:
-                        st.error(str(exc))
+                columns[0].selectbox("Edit priority", list(PRIORITIES), index=list(PRIORITIES).index(current.priority), key=f"priority_{edit_id}")
+                columns[1].selectbox("Edit repeat", list(FREQUENCIES), index=list(FREQUENCIES).index(current.frequency), key=f"frequency_{edit_id}")
+                columns[2].selectbox("Edit activity type", list(CATEGORIES), index=list(CATEGORIES).index(current.category), key=f"category_{edit_id}")
+                st.form_submit_button("Save task changes", on_click=save_task, args=(edit_id,))
 
 with schedule_tab:
     st.subheader("One view. Every pet.")
@@ -169,15 +202,8 @@ with schedule_tab:
         st.warning(f"{len(overdue)} overdue task(s). Change the schedule date to review them.")
     for pet, task in entries:
         if not task.completed:
-            if st.button(f"Complete: {pet.name} — {task.description}", key=f"complete_{task.id}"):
-                try:
-                    next_task = scheduler.mark_task_complete(task.id)
-                    message = f"Completed {task.description}."
-                    if next_task:
-                        message += f" Next occurrence: {next_task.due_date} at {next_task.time}."
-                    flash(message)
-                except ValueError as exc:
-                    st.error(str(exc))
+            st.button(f"Complete: {pet.name} — {task.description}", key=f"complete_{task.id}",
+                      on_click=complete_task, args=(task.id,))
 
 with plan_tab:
     st.subheader("Spend your care time where it matters")

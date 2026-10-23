@@ -34,7 +34,7 @@ classDiagram
         +filter_tasks(pet_name, completed, on_date) list
         +find_task(task_id) tuple
         +update_task(task_id, changes) Task
-        +mark_task_complete(task_id, completed_on) Task
+        +mark_task_complete(task_id, completed_on) Optional~Task~
         +overlaps(first, second) bool
         +detect_conflicts(on_date) list
         +build_plan(on_date, available_minutes) tuple

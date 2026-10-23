@@ -4,6 +4,8 @@ from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
 
+from pawpal_system import Owner, Pet, Task
+
 APP = Path(__file__).resolve().parents[1] / "app.py"
 
 
@@ -13,7 +15,7 @@ def widget(elements, label):
 
 
 def test_add_pet_task_edit_complete_and_plan():
-    app = AppTest.from_file(str(APP)).run()
+    app = AppTest.from_file(str(APP), default_timeout=30).run()
     assert not app.exception
     widget(app.text_input, "Pet name").input("Biscuit")
     widget(app.button, "Add pet").click().run()
@@ -44,7 +46,7 @@ def test_add_pet_task_edit_complete_and_plan():
 
 
 def test_demo_conflicts_and_pet_filter():
-    app = AppTest.from_file(str(APP)).run()
+    app = AppTest.from_file(str(APP), default_timeout=30).run()
     widget(app.button, "Load example household").click().run()
     assert not app.exception
     assert len(app.session_state.owner.pets) == 2
@@ -59,7 +61,7 @@ def test_demo_conflicts_and_pet_filter():
 
 
 def test_validation_and_owner_settings_survive_reruns():
-    app = AppTest.from_file(str(APP)).run()
+    app = AppTest.from_file(str(APP), default_timeout=30).run()
     widget(app.button, "Add pet").click().run()
     assert any("cannot be blank" in error.value for error in app.error)
     assert app.session_state.owner.pets == []
@@ -69,3 +71,20 @@ def test_validation_and_owner_settings_survive_reruns():
     assert not app.exception
     assert app.session_state.owner.name == "Jordan"
     assert app.session_state.owner.preferred_category == "walk"
+
+
+def test_duplicate_descriptions_can_be_edited_independently():
+    app = AppTest.from_file(str(APP), default_timeout=30)
+    first = Task("Feed", "08:00", duration_minutes=5)
+    second = Task("Feed", "08:00", duration_minutes=10)
+    app.session_state.owner = Owner("Jordan", [Pet("Mochi", "dog", [first, second])])
+    app.run()
+    selector = widget(app.selectbox, "Task to edit")
+    assert len(set(selector.options)) == 2
+    selector.select(selector.options[1]).run()
+    widget(app.text_input, "Edit description").input("Second feeding")
+    widget(app.button, "Save task changes").click().run()
+    assert not app.exception
+    tasks = app.session_state.owner.pets[0].tasks
+    assert tasks[0].description == "Feed"
+    assert tasks[1].description == "Second feeding"

@@ -1,0 +1,39 @@
+Today's Schedule - 2026-10-23 (fixed demo date)
+DATE       TIME  PET      TASK                     MIN PRIORITY STATUS
+---------- ----- -------- ------------------------ --- -------- --------
+2026-10-23 08:00 Mochi    Breakfast                 10 high     pending
+2026-10-23 09:00 Luna     Medication reminder        5 high     pending
+2026-10-23 11:00 Luna     Vet appointment           30 high     pending
+2026-10-23 18:00 Mochi    Evening walk              30 medium   pending
+2026-10-23 18:15 Luna     Grooming                  20 low      pending
+
+Pending tasks for Luna
+DATE       TIME  PET      TASK                     MIN PRIORITY STATUS
+---------- ----- -------- ------------------------ --- -------- --------
+2026-10-23 09:00 Luna     Medication reminder        5 high     pending
+2026-10-23 11:00 Luna     Vet appointment           30 high     pending
+2026-10-23 18:15 Luna     Grooming                  20 low      pending
+
+Conflict warnings
+Conflict: Mochi / Evening walk (2026-10-23 18:00) overlaps Luna / Grooming (2026-10-23 18:15).
+
+Priority-first plan: 75 minutes, preferred activity = walk
+DATE       TIME  PET      TASK                     MIN PRIORITY STATUS
+---------- ----- -------- ------------------------ --- -------- --------
+2026-10-23 08:00 Mochi    Breakfast                 10 high     pending
+2026-10-23 09:00 Luna     Medication reminder        5 high     pending
+2026-10-23 11:00 Luna     Vet appointment           30 high     pending
+2026-10-23 18:00 Mochi    Evening walk              30 medium   pending
+Selected Mochi / Breakfast: high priority; 10 min fits (10/75 min used).
+Selected Luna / Medication reminder: high priority; 5 min fits (15/75 min used).
+Selected Luna / Vet appointment: high priority; 30 min fits (45/75 min used).
+Selected Mochi / Evening walk: medium priority; preferred activity; 30 min fits (75/75 min used).
+Skipped Luna / Grooming: overlaps an already selected task.
+
+Completed Breakfast; next daily occurrence: 2026-10-24 08:00
+Repeated completion creates another task: False
+
+Tomorrow's schedule
+DATE       TIME  PET      TASK                     MIN PRIORITY STATUS
+---------- ----- -------- ------------------------ --- -------- --------
+2026-10-24 08:00 Mochi    Breakfast                 10 high     pending

@@ -1,40 +1,46 @@
 # AI Interactions Log
 
-> **Stretch features only.** Only fill in the sections that apply to stretch features you attempted. If you did not attempt a stretch feature, leave its section blank or delete it. This file is not required for the core project.
+## Agent Workflow
 
----
+Tool: OpenAI Codex, including a focused Python review agent.
 
-## Agent Workflow (SF7)
+Actual student request: “go through my browser on the codepath site and figure
+out what needs to be done for project 2 and complete it but dont submit it”.
+Furkan confirmed he was starting fresh. When offered priority-first versus
+shortest-task-first planning, he selected “Priority first, then preferred
+activity type.”
 
-> Document your experience using an AI agent (e.g., Cursor Agent, Claude, Copilot) to make multi-step changes autonomously.
+The agent read all six phases and the grading rubric in the logged-in CodePath
+browser, cloned the official starter, created a draft UML and class skeleton
+commit, then implemented the backend before the Streamlit UI. Files added or
+modified: `pawpal_system.py`, `main.py`, `app.py`, `tests/test_pawpal.py`,
+`tests/test_app.py`, `diagrams/uml_draft.mmd`, `diagrams/uml_final.mmd`,
+`.streamlit/config.toml`, `requirements.txt`, `DESIGN.md`, `README.md`,
+`reflection.md`, and evidence files.
 
-**What task did you give the agent?**
+The advanced algorithm is `Scheduler.build_plan()`: it chooses tasks by priority,
+then owner preference, avoids overlaps and enforces a time budget. It returns
+reasons for inclusion and exclusion. The README contains actual CLI output
+demonstrating that feature. It is a greedy algorithm, not an optimal solver.
 
-<!-- Describe the goal you asked the agent to accomplish -->
+Verification: CLI execution, 41 passing pytest cases including Streamlit AppTest,
+a focused code review, and live browser checks. The review and tests identified
+an edit-to-plan state failure. Explicit widget keys alone did not solve it;
+updating tasks in a form callback before rendering did. A type annotation and a
+check for the optional recurrence result were also added after review.
 
-**What did the agent do?**
+A follow-up review caught ambiguous edit labels when two tasks have identical
+descriptions and times. Numbered choices now distinguish them; a regression test
+verifies that editing the second leaves the first untouched. A live browser check
+also confirmed that the selected plan tab remains visible after regeneration.
 
-<!-- List the steps the agent took (files edited, commands run, etc.) -->
+Manual student corrections: none reported. The priority policy is confirmed
+student input. The code, test execution and debugging were AI work. No independent
+student implementation, personal test run, or understanding of every line is
+claimed. No CodePath submission was made.
 
-**What did you have to verify or fix manually?**
+## Prompt comparison
 
-<!-- Describe anything the agent got wrong or that required human review -->
-
----
-
-## Prompt Comparison (SF11)
-
-> Compare two different prompts (or two different models) on the same task.
-
-| | Option A | Option B |
-|-|----------|----------|
-| **Model / tool used** | | |
-| **Prompt** | | |
-| **Response summary** | | |
-| **What was useful** | | |
-| **Problems noticed** | | |
-| **Decision** | | |
-
-**Which approach did you use in your final implementation and why?**
-
-<!-- Your conclusion -->
+No two-model or two-prompt experiment was conducted; no comparison stretch credit
+is claimed. Choosing between two scheduling policies is a product decision, not
+a fabricated model-comparison experiment.

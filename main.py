@@ -57,6 +57,7 @@ def main() -> None:
         print(explanation)
     breakfast = next(task for _, task in owner.all_tasks() if task.description == "Breakfast")
     next_task = scheduler.mark_task_complete(breakfast.id, DEMO_DATE)
+    assert next_task is not None
     print(f"\nCompleted Breakfast; next daily occurrence: {next_task.due_date} {next_task.time}")
     print("Repeated completion creates another task:", scheduler.mark_task_complete(breakfast.id) is not None)
     print("\nTomorrow's schedule")

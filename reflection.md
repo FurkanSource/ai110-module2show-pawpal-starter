@@ -1,71 +1,106 @@
 # PawPal+ Project Reflection
 
+Status: technical reflection draft, with confirmed student decisions. Personal
+learning statements need Furkan's review before submission. This document does
+not claim that Furkan independently wrote or personally tested the generated code.
+
 ## 1. System Design
 
-**a. Initial design**
+### a. Initial design
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+Three user actions are adding a pet, scheduling/completing a care task, and
+viewing a daily household schedule. The AI-generated draft used four classes:
+Task for one activity, Pet for its identifying details and tasks, Owner for pets
+and a preference, and Scheduler for cross-pet organization. This keeps scheduling
+rules separate from Streamlit, so the same behavior can be exercised in a CLI.
 
-**b. Design changes**
+### b. Design changes
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
-
----
+The implementation added unique task IDs so two tasks with the same description
+can still be edited or completed independently. It added interval endpoints for
+duration-based conflict detection rather than only comparing exact times.
+The final UML also includes task editing and the owner's preferred activity.
+These changes were made by Codex, not independently coded by Furkan.
 
 ## 2. Scheduling Logic and Tradeoffs
 
-**a. Constraints and priorities**
+### a. Constraints and priorities
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+Confirmed student choice: “Priority first, then preferred activity type.”
+The scheduler considers a daily minute budget, priority, owner preference,
+scheduled time and overlapping intervals. The preference only breaks ties at
+the same priority; it cannot move a low-priority walk ahead of a high-priority
+task. This is the policy Furkan chose when offered priority-first versus
+shortest-task-first planning.
 
-**b. Tradeoffs**
+### b. Tradeoffs
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
-
----
+The chosen policy can finish fewer tasks than shortest-first scheduling. For
+example, with 20 minutes available, a 20-minute high-priority activity is selected
+before a 5-minute low-priority activity. This favors important care rather than
+the number of completed tasks. The greedy algorithm is easy to explain but does
+not search for a mathematically optimal combination. Skipped tasks remain visible
+and pending, and the plan never silently moves an appointment.
 
 ## 3. AI Collaboration
 
-**a. How you used AI**
+### a. How AI was used
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
+Furkan asked Codex to inspect the CodePath instructions, complete Project 2 and
+leave it unsubmitted, then confirmed “starting fresh.” Codex read the starter
+and rubric, generated a design/UML, implemented the backend and Streamlit UI,
+created tests, ran the demo, checked the browser and prepared documentation.
+The useful capabilities were multi-file editing, running tests, and browser
+inspection. Work stayed in one main chat with a focused Python review agent;
+separate student chat sessions for each phase were not used.
 
-**b. Judgment and verification**
+### b. Judgment and verification
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
-
----
+Furkan accepted priority-first planning and chose it over the shortest-task-first
+alternative. This is a real student decision, not an invented rejection story.
+The implementation also changed after verification: the first edit form used an
+immediate rerun that left stale selector state in the UI test. Codex replaced
+the edit and completion handlers with callbacks that update the data before
+rendering. Automated tests then passed. That debugging work was performed by
+the AI agent, not by Furkan personally.
 
 ## 4. Testing and Verification
 
-**a. What you tested**
+### a. What was tested
 
-- What behaviors did you test?
-- Why were these tests important?
+The AI-generated suite contains 41 passing cases covering the core objects,
+sorting, filters, recurrence, conflicts, budgets, invalid inputs, and Streamlit
+forms. Calendar boundaries and double completion matter because recurrence must
+create exactly one valid next occurrence. Cross-pet overlap tests matter because
+the owner cannot perform two care activities simultaneously. UI tests check that
+backend correctness is actually connected to the forms and survives reruns.
 
-**b. Confidence**
+The README contains captured CLI and pytest output. Verification was run by
+Codex; Furkan has not reported personally running these tests.
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+### b. Confidence
 
----
+Codex's technical assessment is 4/5 based on passing tests and browser checks.
+Furkan's own confidence rating is not yet provided. Future verification could
+cover timezone/DST handling and saved-data recovery if those features are added.
 
 ## 5. Reflection
 
-**a. What went well**
+### a. What went well
 
-- What part of this project are you most satisfied with?
+Technical result: the four-class design supports both the CLI and UI, and the
+priority-first rule is explicit and testable. Furkan's personal assessment of
+which part he is most satisfied with is still to be added after reviewing it.
 
-**b. What you would improve**
+### b. What would be improved
 
-- If you had another iteration, what would you improve or redesign?
+A concrete technical next step is disk persistence so a browser reload does not
+lose tasks. This is an AI suggestion, not yet a student-selected improvement.
 
-**c. Key takeaway**
+### c. Key takeaway
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+Awaiting Furkan's own words about what he learned. A technical observation from
+this build is that passing backend tests does not prove that the UI's state
+handling is correct: the edit-to-plan integration test caught an additional bug.
+This observation should not be presented as Furkan's personal learning until he
+reviews and confirms it.
