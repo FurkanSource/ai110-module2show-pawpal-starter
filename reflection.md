@@ -1,8 +1,7 @@
 # PawPal+ Project Reflection
 
-Status: technical reflection draft, with confirmed student decisions. Personal
-learning statements need Furkan's review before submission. This document does
-not claim that Furkan independently wrote or personally tested the generated code.
+This reflection records confirmed student decisions and the AI-assisted process.
+It does not claim that Furkan independently wrote or personally tested the code.
 
 ## 1. System Design
 
@@ -46,8 +45,8 @@ and pending, and the plan never silently moves an appointment.
 
 ### a. How AI was used
 
-Furkan asked Codex to inspect the CodePath instructions, complete Project 2 and
-leave it unsubmitted, then confirmed “starting fresh.” Codex read the starter
+Furkan asked Codex to inspect the CodePath instructions and complete Project 2,
+then confirmed “starting fresh.” Codex read the starter
 and rubric, generated a design/UML, implemented the backend and Streamlit UI,
 created tests, ran the demo, checked the browser and prepared documentation.
 The useful capabilities were multi-file editing, running tests, and browser
@@ -80,27 +79,28 @@ Codex; Furkan has not reported personally running these tests.
 
 ### b. Confidence
 
-Codex's technical assessment is 4/5 based on passing tests and browser checks.
-Furkan's own confidence rating is not yet provided. Future verification could
-cover timezone/DST handling and saved-data recovery if those features are added.
+Furkan rated his confidence **5/5**. Codex ran the tests and browser checks;
+Furkan has not reported running them himself or supplied a reason for the rating.
+Codex's technical assessment is 4/5 because the tested behavior works, while
+timezone/DST handling and saved-data recovery remain outside the current scope.
 
 ## 5. Reflection
 
 ### a. What went well
 
-Technical result: the four-class design supports both the CLI and UI, and the
-priority-first rule is explicit and testable. Furkan's personal assessment of
-which part he is most satisfied with is still to be added after reviewing it.
+The four-class design supports both the CLI and UI, and the priority-first rule
+is explicit and testable. Furkan selected that rule and a preferred-activity
+tie break; he has not identified a personal favorite part of the implementation.
 
 ### b. What would be improved
 
 A concrete technical next step is disk persistence so a browser reload does not
-lose tasks. This is an AI suggestion, not yet a student-selected improvement.
+lose tasks. This is a proposed improvement from Codex, not a student-selected one.
 
 ### c. Key takeaway
 
-Awaiting Furkan's own words about what he learned. A technical observation from
-this build is that passing backend tests does not prove that the UI's state
-handling is correct: the edit-to-plan integration test caught an additional bug.
-This observation should not be presented as Furkan's personal learning until he
-reviews and confirms it.
+The lead-architect decision evidenced in this project was setting the scheduling
+policy: priority first, then preferred activity type. AI generated the code and
+test suite and performed the verification. The edit-to-plan integration test
+caught a UI state bug after backend tests passed, illustrating why the result
+needed end-to-end checks. Furkan has not supplied a personal learning statement.

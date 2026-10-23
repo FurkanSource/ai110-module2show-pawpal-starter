@@ -16,7 +16,7 @@ test, diagram, configuration and documentation file was reviewed against it.
 | End-to-end CLI | `main.py`: one owner, two pets, five tasks, formatted output | Runs; output matches saved evidence |
 | Pytest | Domain and Streamlit AppTest suites | Original 41 cases passed before new audit fixes |
 | README | Setup, classes, algorithm/method mapping, walkthrough, CLI and test output | Present; walkthrough clarified for edited sample data |
-| AI reflection | `reflection.md`, `ai_interactions.md` | Technical details and confirmed decisions present; personal answers pending |
+| AI reflection | `reflection.md`, `ai_interactions.md` | Technical details, confirmed student design choice and 5/5 confidence rating present; no personal learning claim invented |
 | UI instructions | Owner/pet/task forms, editing, completion, sorting, filters, warnings, state, plan explanations | Present and exercised by UI tests |
 | Repository preparation | Public fork, phased commits, required source files | Verified; no CodePath submission performed |
 
@@ -52,12 +52,12 @@ the README's embedded diagram; all matched. A fresh live-browser session added
 a pet named `All pets`, scheduled a task on 2040-01-01 and successfully selected
 `Pet: All pets` to show that task. See `evidence/browser-audit.png`.
 
-## Remaining human work
+## Student input and limits
 
-Furkan's personal confidence rating, what went well, improvement choice and
-learning takeaway remain unprovided. They are clearly marked in the reflection
-draft and have not been fabricated. Review the generated code and reflection
-before submission. This audit does not predict or guarantee a grade.
+Furkan selected priority-first scheduling with a preferred-activity tie break,
+provided a 5/5 confidence rating and estimated one hour of personal time.
+He has not reported a personal code review, test run or learning takeaway; none
+is attributed to him. This audit does not predict or guarantee a grade.
 
 Optional disk persistence and a two-model/prompt comparison were not implemented
-and are not claimed. CodePath submission remains intentionally undone.
+and are not claimed.

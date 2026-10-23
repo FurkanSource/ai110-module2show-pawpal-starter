@@ -13,14 +13,14 @@ read October 23, 2026. Deadline shown: October 25, 2026, 11:59 PM EDT.
 - [x] 47 passing domain and Streamlit integration tests.
 - [x] README setup, class/algorithm descriptions, walkthrough and captured output.
 - [x] Multiple meaningful local commits and a fork under FurkanSource.
-- [x] Honest AI interaction log and technical reflection draft.
-- [ ] Furkan's personal learning takeaway, improvement choice and confidence rating.
-- [ ] Furkan reviews the generated code and reflection before submission.
-- [ ] CodePath submission — intentionally NOT performed.
+- [x] Honest AI interaction log and reflection distinguishing student input from AI work.
+- [x] Furkan's 5/5 confidence rating recorded.
+- [x] Furkan's one-hour estimate recorded for CodePath's required form field.
+- [ ] Furkan's personal code review, test run or learning takeaway — not reported.
+- [ ] CodePath submission — complete after final push.
 
 The project implementation is AI-generated. Furkan confirmed starting fresh and
-selected the priority-first/preferred-activity policy. The remaining personal
-reflection items must describe his own experience. No model-comparison or disk
-persistence stretch feature is claimed.
+selected the priority-first/preferred-activity policy. No personal learning is
+invented. No model-comparison or disk persistence stretch feature is claimed.
 
 The app stores data only for the current Streamlit session; it has no disk save/load.

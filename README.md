@@ -226,9 +226,10 @@ An initial UI test exposed stale selector state after editing. Editing and
 completion now use callbacks before rendering, so the selector, schedule and
 plan all see the updated domain data.
 
-**AI assessment of confidence: 4/5.** The tested behavior is covered by domain
-and UI checks, plus a live-browser check. This is not a student-authored confidence
-rating and is not a guarantee of production reliability.
+**Furkan's confidence rating: 5/5.** Codex performed the domain, UI, and
+live-browser checks. Furkan has not reported personally running those checks.
+**AI technical assessment: 4/5.** This is separate from the student's rating
+and is not a guarantee of production reliability.
 
 The two-pass review and fixes are recorded in `AUDIT.md`.
 
@@ -252,5 +253,5 @@ This implementation, tests and documentation were generated with Codex. Furkan
 requested the project, confirmed he was starting fresh, and selected the
 priority-first/preferred-activity policy. No independent coding authorship is
 claimed. `ai_interactions.md` records the actual workflow and verification.
-`reflection.md` distinguishes confirmed student input from technical notes that
-still need his personal review. No CodePath submission was made.
+`reflection.md` distinguishes confirmed student input from technical notes.
+Furkan provided a 5/5 confidence rating; personal code review was not reported.
