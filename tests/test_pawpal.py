@@ -227,3 +227,31 @@ def test_recurrence_overflow_does_not_partially_complete(household):
         scheduler.mark_task_complete(task.id, date.max)
     assert not task.completed
     assert len(first.tasks) == 1
+
+
+def test_task_rejects_unrepresentable_end_time():
+    with pytest.raises(ValueError, match="end.*date range"):
+        Task("Too late", "23:59", date.max, 15)
+    last_valid = Task("Last minute", "23:58", date.max, 1)
+    assert last_valid.ends_at.date() == date.max
+    assert last_valid.ends_at.strftime("%H:%M") == "23:59"
+
+
+def test_overflowing_edit_preserves_original(household):
+    first, _, scheduler = household
+    task = Task("Walk", "23:59", DAY, 15)
+    first.add_task(task)
+    with pytest.raises(ValueError, match="end.*date range"):
+        scheduler.update_task(task.id, due_date=date.max)
+    assert first.tasks[0] is task
+    assert task.due_date == DAY
+
+
+def test_next_occurrence_end_overflow_is_atomic(household):
+    first, _, scheduler = household
+    task = Task("Late daily", "23:59", date.max - timedelta(days=1), 15, frequency="daily")
+    first.add_task(task)
+    with pytest.raises(ValueError, match="end.*date range"):
+        scheduler.mark_task_complete(task.id, date.max - timedelta(days=1))
+    assert not task.completed
+    assert first.tasks == [task]

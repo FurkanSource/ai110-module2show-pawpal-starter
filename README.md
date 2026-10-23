@@ -131,8 +131,9 @@ can take O(n²) in the worst case, which is acceptable for a small household.
 4. To fix a conflict, choose the task in **Edit a pending task**, change its time
    or duration, and save. The schedule and warnings are recalculated.
 5. Open **Build a plan**, keep the 75-minute budget, and click **Generate plan**.
-   The three high-priority tasks and the walk fit; grooming is skipped because
-   it overlaps the walk. Read the individual selection and skip explanations.
+   With the original example times, the three high-priority tasks and the walk
+   fit; grooming is skipped because it overlaps the walk. If you edited a task
+   in step 4, the result reflects those changes. Read the individual explanations.
 6. Complete a daily task from **Daily schedule**. Its original row becomes
    Complete, and a pending occurrence appears on the next day. Change the date
    filter to see it. Completing a once-only appointment creates no new task.
@@ -204,13 +205,19 @@ empty households, and recurrence date overflow.
 
 `tests/test_app.py` uses Streamlit AppTest to submit real forms and verify
 session-state behavior. It covers add → edit → plan → complete, example loading,
-pet filtering, conflict visibility, blank input and owner preferences.
+pet filtering (including a pet named All pets), conflict visibility, blank input,
+owner preferences, independent editing of duplicate descriptions, and recurrence
+beyond the default ten-year date-picker window.
+
+`tests/test_scheduler_properties.py` checks 200 seeded households against an
+independent integer-minute overlap calculation and verifies plan invariants: no
+overlaps, no budget overruns, correct ordering and no unintended task mutations.
+Domain tests also verify invalid end dates cannot partially edit or complete a task.
 
 Captured passing output:
 
 ```text
-.........................................                                [100%]
-41 passed in 5.37s
+47 passed in 11.86s
 ```
 
 Raw evidence is in `evidence/cli-output.txt` and `evidence/pytest-output.txt`.
@@ -223,6 +230,8 @@ plan all see the updated domain data.
 and UI checks, plus a live-browser check. This is not a student-authored confidence
 rating and is not a guarantee of production reliability.
 
+The two-pass review and fixes are recorded in `AUDIT.md`.
+
 ## Limits
 
 - Data is stored in `st.session_state`, not on disk. It survives normal UI
@@ -234,6 +243,8 @@ rating and is not a guarantee of production reliability.
   windows, travel time and optimal scheduling are outside this project's scope.
 - A daily schedule filters by due date, not by every day touched by a task.
   Conflict warnings still account for overnight overlaps.
+- Date pickers cover Python's supported calendar range. A task whose end would
+  exceed that range is rejected before any state is changed.
 
 ## AI collaboration and ownership
 

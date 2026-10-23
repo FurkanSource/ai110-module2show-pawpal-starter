@@ -10,7 +10,7 @@ read October 23, 2026. Deadline shown: October 25, 2026, 11:59 PM EDT.
 - [x] Daily/weekly recurrence, completion history, and conflict detection.
 - [x] Streamlit forms, session state, task editing, filters, warnings and plan UI.
 - [x] Priority-first budgeted planning with preferred-activity tie breaking.
-- [x] 41 passing domain and Streamlit integration tests.
+- [x] 47 passing domain and Streamlit integration tests.
 - [x] README setup, class/algorithm descriptions, walkthrough and captured output.
 - [x] Multiple meaningful local commits and a fork under FurkanSource.
 - [x] Honest AI interaction log and technical reflection draft.

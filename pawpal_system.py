@@ -43,6 +43,10 @@ class Task:
             raise ValueError("Due date must be a calendar date.")
         if type(self.duration_minutes) is not int or not 1 <= self.duration_minutes <= 240:
             raise ValueError("Duration must be a whole number from 1 to 240 minutes.")
+        try:
+            _ = self.ends_at
+        except OverflowError as exc:
+            raise ValueError("Task end exceeds the supported date range.") from exc
         if self.priority not in PRIORITIES:
             raise ValueError("Priority must be high, medium, or low.")
         if self.frequency not in FREQUENCIES:

@@ -139,7 +139,7 @@ with tasks_tab:
             chosen_pet = st.selectbox("Task's pet", pet_names)
             description = st.text_input("Task description", placeholder="e.g. Morning walk")
             columns = st.columns(3)
-            task_date = columns[0].date_input("Due date", date.today())
+            task_date = columns[0].date_input("Due date", date.today(), min_value=date.min, max_value=date.max)
             task_time = columns[1].time_input("Due time", time(8))
             duration = columns[2].number_input("Duration (minutes)", 1, 240, 15)
             columns = st.columns(3)
@@ -170,7 +170,8 @@ with tasks_tab:
             with st.form(f"edit_{edit_id}"):
                 st.text_input("Edit description", current.description, key=f"description_{edit_id}")
                 columns = st.columns(3)
-                columns[0].date_input("Edit date", current.due_date, key=f"date_{edit_id}")
+                columns[0].date_input("Edit date", current.due_date, min_value=date.min,
+                                     max_value=date.max, key=f"date_{edit_id}")
                 columns[1].time_input("Edit time", current.starts_at.time(), key=f"time_{edit_id}")
                 columns[2].number_input("Edit duration", 1, 240, current.duration_minutes, key=f"duration_{edit_id}")
                 columns = st.columns(3)
@@ -182,12 +183,13 @@ with tasks_tab:
 with schedule_tab:
     st.subheader("One view. Every pet.")
     columns = st.columns(3)
-    selected_day = columns[0].date_input("Schedule date", date.today())
-    selected_pet = columns[1].selectbox("Filter by pet", ["All pets", *[pet.name for pet in owner.pets]])
+    selected_day = columns[0].date_input("Schedule date", date.today(), min_value=date.min, max_value=date.max)
+    pet_filters = {"All pets": None, **{f"Pet: {pet.name}": pet.name for pet in owner.pets}}
+    selected_pet = columns[1].selectbox("Filter by pet", list(pet_filters))
     status = columns[2].selectbox("Filter by status", ["All", "Pending", "Complete"])
     completed = {"All": None, "Pending": False, "Complete": True}[status]
     entries = scheduler.sort_by_time(scheduler.filter_tasks(
-        None if selected_pet == "All pets" else selected_pet, completed, selected_day,
+        pet_filters[selected_pet], completed, selected_day,
     ))
     show_schedule(entries)
     warnings = scheduler.detect_conflicts(selected_day)
@@ -208,7 +210,7 @@ with schedule_tab:
 with plan_tab:
     st.subheader("Spend your care time where it matters")
     st.write("Choose high-priority tasks first, then your preferred activity, then the earliest time. Tasks keep their scheduled times.")
-    plan_day = st.date_input("Plan date", date.today())
+    plan_day = st.date_input("Plan date", date.today(), min_value=date.min, max_value=date.max)
     budget = st.number_input("Available care time (minutes)", 0, 1440, 75)
     if st.button("Generate plan"):
         st.session_state.plan_request = (plan_day, int(budget))

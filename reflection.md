@@ -68,7 +68,7 @@ the AI agent, not by Furkan personally.
 
 ### a. What was tested
 
-The AI-generated suite contains 41 passing cases covering the core objects,
+The AI-generated suite contains 47 passing cases covering the core objects,
 sorting, filters, recurrence, conflicts, budgets, invalid inputs, and Streamlit
 forms. Calendar boundaries and double completion matter because recurrence must
 create exactly one valid next occurrence. Cross-pet overlap tests matter because

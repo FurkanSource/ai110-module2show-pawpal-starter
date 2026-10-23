@@ -23,7 +23,7 @@ then owner preference, avoids overlaps and enforces a time budget. It returns
 reasons for inclusion and exclusion. The README contains actual CLI output
 demonstrating that feature. It is a greedy algorithm, not an optimal solver.
 
-Verification: CLI execution, 41 passing pytest cases including Streamlit AppTest,
+Verification: CLI execution, 47 passing pytest cases including Streamlit AppTest,
 a focused code review, and live browser checks. The review and tests identified
 an edit-to-plan state failure. Explicit widget keys alone did not solve it;
 updating tasks in a form callback before rendering did. A type annotation and a
@@ -44,3 +44,15 @@ claimed. No CodePath submission was made.
 No two-model or two-prompt experiment was conducted; no comparison stretch credit
 is claimed. Choosing between two scheduling policies is a product decision, not
 a fabricated model-comparison experiment.
+
+
+## Two-pass verification requested by Furkan
+
+Furkan subsequently asked: “go over everything twice”. The first pass mapped
+the code and deliverables back to the official rubric and reran the original
+41 tests, Ruff and Mypy. An independent second review found an ambiguous pet
+filter label, unvalidated end-date overflow, and a date-picker window that could
+hide future recurrences. Four regression cases reproduced the first two bugs
+before they were fixed. The final suite passes 47 cases, including a future-date
+UI journey and one test that checks 200 deterministic randomized households.
+These were AI-run checks; no personal student test execution is implied.
